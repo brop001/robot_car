@@ -12,10 +12,10 @@
 #include "esp_system.h"
 
 #include "delay_.h"
-#include "gpio_init.h"
 #include "buzzer.h"
 #include "RGB_led.h"
 #include "ultrasonic.h"
+#include "motor_driver.h"
 
 
 static const char* TAG = "robot_car";
@@ -25,6 +25,7 @@ void app_main()
     buzzer_init();
     RGB_led_init();
     ultrasonic_init();
+    motor_init();
 
     int us_distance_in_cm = 0;
 
@@ -38,11 +39,34 @@ void app_main()
         else printf("us_distance_in_ms: %d\n",us_distance_in_cm);
         delay_ms(100);
 
-        /*for(int i=0;i<8;i++){
+        for(int i=0;i<8;i++){
 			set_led(i);
 			delay_ms(1000);
             
-		}*/
+		}
+        
+            printf("set_motor_R_fwd(30)\n");
+            set_motor_R_fwd(30.0);
+            delay_ms(1000);
+            printf("set_motor_R_rvs(50)\n");
+            set_motor_R_rvs(50.0);
+            set_motor_L_fwd(50.0);
+            delay_ms(1000);
+            printf("set_motor_R_stop()\n");
+            set_motor_R_stop();
+            delay_ms(1000);
+            printf("set_motor_L_fwd(50)\n");
+            set_motor_L_fwd(50.0);
+            delay_ms(1000);
+            printf("set_motor_L_rvs(80)\n");
+            set_motor_L_rvs(100.0);
+            delay_ms(1000);
+            printf("set_motor_L_stop()\n");
+            set_motor_L_stop();
+            delay_ms(1000);
+        
+        
+
 
     }
 }

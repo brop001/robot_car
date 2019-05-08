@@ -5,3 +5,5 @@
 - RGB led library added.
 
 - Ultrasonic distance sensor library added.
+
+- Motor driver library added.
