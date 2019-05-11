@@ -14,9 +14,9 @@
 #include "delay_.h"
 
 
-#define	GPIO_LED_R 27
-#define	GPIO_LED_G 25
-#define	GPIO_LED_B 26
+#define	GPIO_LED_R 17
+#define	GPIO_LED_G 15
+#define	GPIO_LED_B 16
 
 #define GPIO_RGB_LED_PIN_SEL  ((1ULL<<GPIO_LED_R)|(1ULL<<GPIO_LED_G)|(1ULL<<GPIO_LED_B))
 

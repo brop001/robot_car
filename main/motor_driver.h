@@ -10,10 +10,10 @@
 
 #include "driver/gpio.h"
 
-#define GPIO_MOTOR_IN1    5
-#define GPIO_MOTOR_IN2    17
-#define GPIO_MOTOR_IN3    16
-#define GPIO_MOTOR_IN4    4
+#define GPIO_MOTOR_IN1    25
+#define GPIO_MOTOR_IN2    26
+#define GPIO_MOTOR_IN3    27
+#define GPIO_MOTOR_IN4    14
 
 #define GPIO_MOTOR_PIN_SEL  ((1ULL<<GPIO_MOTOR_IN1)|(1ULL<<GPIO_MOTOR_IN2)|(1ULL<<GPIO_MOTOR_IN3)|(1ULL<<GPIO_MOTOR_IN4))
 

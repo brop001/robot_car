@@ -13,7 +13,7 @@
 
 #include "delay_.h"
 
-#define GPIO_BUZZER 14
+#define GPIO_BUZZER 4
 
 #define GPIO_BUZZER_PIN_SEL  ((1ULL<<GPIO_BUZZER))
 
