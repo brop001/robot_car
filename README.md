@@ -7,3 +7,5 @@
 - Ultrasonic distance sensor library added.
 
 - Motor driver library added.
+
+- Servo library added.
