@@ -16,6 +16,7 @@
 #include "RGB_led.h"
 #include "ultrasonic.h"
 #include "motor_driver.h"
+#include "servo.h"
 
 
 static const char* TAG = "robot_car";
@@ -26,12 +27,13 @@ void app_main()
     RGB_led_init();
     ultrasonic_init();
     motor_init();
+    servo_init();
 
     int us_distance_in_cm = 0;
 
     for(;;){
         //printf("Hello world\n");
-        delay_ms(1000);
+        /*delay_ms(1000);
         buzzer(200,500);
         delay_ms(1000);
         buzzer(1000,500);
@@ -45,9 +47,31 @@ void app_main()
 			set_led(i);
 			delay_ms(1000);
             
-		}
+		}*/
+
+        for(int i=0;i<181;i++)
+        {
+           
+            set_servo(i);
+            printf("Servo duty cycle: %d\n",i);
+            //if(!i)delay_ms(5000);
+            delay_ms(10);
+        }
+        for(int i=180;i>0;i--)
+        {
+            set_servo(i);
+            printf("Servo duty cycle: %d\n",i);
+            //if(!i)delay_ms(5000);
+            delay_ms(10);
+        }
+        //set_servo(0);
+        //delay_ms(2000);
+        //set_servo(180);
+        //delay_ms(2000);
+
         
-            printf("set_motor_R_fwd(30)\n");
+        
+            /*printf("set_motor_R_fwd(30)\n");
             set_motor_R_fwd(70.0);
             set_motor_L_fwd(70.0);
             delay_ms(1000);
@@ -70,7 +94,8 @@ void app_main()
             printf("set_motor_L_stop()\n");
             set_motor_L_stop();
             set_motor_R_stop();
-            delay_ms(1000);
+            delay_ms(1000);*/
+            
         
         
 
