@@ -61,7 +61,7 @@ int get_us_distance_in_us()
 
 int get_us_distance_in_cm()
 {
-    long us_distance_in_us = get_us_distance_in_us();
+    int us_distance_in_us = get_us_distance_in_us();
     if(us_distance_in_us==EXIT_FAILURE){
         return(EXIT_FAILURE);
     }

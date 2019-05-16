@@ -9,11 +9,14 @@
 #define MAIN_MOTOR_DRIVER_H_
 
 #include "driver/gpio.h"
+#include "driver/pcnt.h"
 
 #define GPIO_MOTOR_IN1    25
 #define GPIO_MOTOR_IN2    26
 #define GPIO_MOTOR_IN3    27
 #define GPIO_MOTOR_IN4    14
+#define GPIO_MOTOR_R_SENSOR 34
+#define GPIO_MOTOR_L_SENSOR 35
 
 #define GPIO_MOTOR_PIN_SEL  ((1ULL<<GPIO_MOTOR_IN1)|(1ULL<<GPIO_MOTOR_IN2)|(1ULL<<GPIO_MOTOR_IN3)|(1ULL<<GPIO_MOTOR_IN4))
 
