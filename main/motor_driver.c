@@ -8,6 +8,7 @@
 #include "motor_driver.h"
 #include "driver/mcpwm.h"
 
+
 void motor_init(void)
 {
    	gpio_config_t io_conf;
@@ -54,35 +55,82 @@ void set_motor_R_fwd(float speed)
 {
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,0.0);
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,speed);
+    delay_ms(1);
 }
 
 void set_motor_R_rvs(float speed)
 {
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,speed);
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,0);
+    delay_ms(1);
 }
 
 void set_motor_R_stop()
 {
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,0);
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,0);
+    delay_ms(1);
 }
 
 void set_motor_L_fwd(float speed)
 {
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_A,0);
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_B,speed);
+    delay_ms(1);
 }
 
 void set_motor_L_rvs(float speed)
 {
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_A,speed);
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_B,0);
+    delay_ms(1);
 }
 
 void set_motor_L_stop()
 {
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_A,0);
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_B,0);
+    delay_ms(1);
 }
 
+void set_motor_R(int steps, int direction, float speed)
+{
+    if(direction==(1)){
+        set_motor_R_fwd(speed);
+    }
+    if(direction==(-1)){
+        set_motor_R_rvs(speed);
+    }
+    //delay_ms(steps);
+    //set_motor_R_stop();
+    xTaskCreate( counter_R_task, "Set_motor_R_task", 1024*2, (void *) steps, 1, xCounterRHandle );
+}
+
+void set_motor_L(int steps, int direction, float speed)
+{
+    if(direction==(1)){
+        set_motor_L_fwd(speed);
+    }
+    if(direction==(-1)){
+        set_motor_L_rvs(speed);
+    }
+    //delay_ms(steps);
+    //set_motor_L_stop();
+    xTaskCreate( counter_L_task, "Set_motor_L_task", 1024*2, (void *) steps, 1, xCounterLHandle );
+}
+
+void counter_R_task(void *parameter)
+{
+    int *counter = (int *)parameter;   
+    delay_ms(counter);
+    set_motor_R_stop();
+    vTaskDelete( xCounterRHandle );
+}
+
+void counter_L_task(void *parameter)
+{
+    int *counter = (int *)parameter;   
+    delay_ms(counter);
+    set_motor_L_stop();
+    vTaskDelete( xCounterRHandle );
+}
