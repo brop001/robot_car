@@ -17,6 +17,7 @@
 #include "ultrasonic.h"
 #include "motor_driver.h"
 #include "servo.h"
+#include "infrared.h"
 
 
 static const char* TAG = "robot_car";
@@ -26,6 +27,7 @@ TaskHandle_t xRGB_led_test_Handle;
 TaskHandle_t xbuzzer_test_Handle;
 TaskHandle_t xultrasonic_test_Handle;
 TaskHandle_t xmotor_test_Handle;
+TaskHandle_t xinfrared_test_Handle;
 TaskHandle_t xdemo_task_Handle;
 
 void servo_test(void *parameters);
@@ -33,6 +35,7 @@ void RGB_led_test(void *parameters);
 void buzzer_test(void *parameters);
 void ultrasonic_test(void *parameters);
 void motor_test(void *parameters);
+void infrared_test(void *parameters);
 void demo_task(void *parameters);
 
 
@@ -112,6 +115,15 @@ void motor_test(void *parameters)
         set_motor_L(2000,1,50);
         delay_ms(5000);
     }
+}
+
+void infrared_test(void *parameters)
+{
+    while(1){
+        printf("L2: %d  L1: %d  R1: %d  R2: %d\n", get_ir_sensor_L2(),get_ir_sensor_L1(),get_ir_sensor_R1(),get_ir_sensor_R2());
+        delay_ms(100);
+    }
+    
 }
 
 void demo_task(void *parameters)
@@ -242,13 +254,15 @@ void app_main()
     ultrasonic_init();
     motor_init();
     servo_init();
+    ir_sensor_init();
 
     //xTaskCreate(&servo_test, "servo_test", 1024 * 12, NULL, 5, xservo_test_Handle);
     //xTaskCreate(&RGB_led_test, "RGB_led_test", 1024 * 12, NULL, 5, xRGB_led_test_Handle);
     //xTaskCreate(&buzzer_test, "buzzer_test", 1024 * 12, NULL, 5, xbuzzer_test_Handle);
     //xTaskCreate(&ultrasonic_test, "ultrasonic_test", 1024 * 12, NULL, 5, xultrasonic_test_Handle);
-    xTaskCreate(&motor_test, "motor_test", 1024 * 12, NULL, 5, xmotor_test_Handle);
-    //xTaskCreate(&demo_task, "demo_task", 1024 * 12, NULL, 5, xdemo_task_Handle);
+    //xTaskCreate(&motor_test, "motor_test", 1024 * 12, NULL, 5, xmotor_test_Handle);
+    //xTaskCreate(&infrared_test, "infrared_test", 1024 * 12, NULL, 5, xinfrared_test_Handle);
+    xTaskCreate(&demo_task, "demo_task", 1024 * 12, NULL, 5, xdemo_task_Handle);
 
     
     for(;;){

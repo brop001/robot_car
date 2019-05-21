@@ -13,6 +13,8 @@
 
 - Servo library added.
 
+- Infrared sensor library added.
+
 
 ## Tasks
 
@@ -25,5 +27,7 @@
 - ultrasonic_test
 
 - motor_test
+
+- infrared_test
 
 - demo_task
