@@ -21,10 +21,18 @@
 
 static const char* TAG = "robot_car";
 
+TaskHandle_t xservo_test_Handle;
+TaskHandle_t xRGB_led_test_Handle;
+TaskHandle_t xbuzzer_test_Handle;
+TaskHandle_t xultrasonic_test_Handle;
+TaskHandle_t xmotor_test_Handle;
+TaskHandle_t xdemo_task_Handle;
+
 void servo_test(void *parameters);
 void RGB_led_test(void *parameters);
 void buzzer_test(void *parameters);
 void ultrasonic_test(void *parameters);
+void motor_test(void *parameters);
 void demo_task(void *parameters);
 
 
@@ -82,6 +90,27 @@ void ultrasonic_test(void *parameters)
         if(us_distance_in_cm == EXIT_FAILURE)printf("Distance measurement failed!\n");
         else printf("us_distance_in_ms: %.2f\n",us_distance_in_cm);
         delay_ms(100);
+    }
+}
+
+void motor_test(void *parameters)
+{
+    while(1){
+        set_motor_R(500,1,50);
+        set_motor_L(500,1,60);
+        delay_ms(1000);
+
+        set_motor_R(200,-1,50);
+        set_motor_L(200,-1,60);
+        delay_ms(3000);
+
+        set_motor_R(2000,1,50);
+        set_motor_L(2000,-1,50);
+        delay_ms(5000);
+        
+        set_motor_R(2000,-1,50);
+        set_motor_L(2000,1,50);
+        delay_ms(5000);
     }
 }
 
@@ -214,42 +243,15 @@ void app_main()
     motor_init();
     servo_init();
 
+    //xTaskCreate(&servo_test, "servo_test", 1024 * 12, NULL, 5, xservo_test_Handle);
+    //xTaskCreate(&RGB_led_test, "RGB_led_test", 1024 * 12, NULL, 5, xRGB_led_test_Handle);
+    //xTaskCreate(&buzzer_test, "buzzer_test", 1024 * 12, NULL, 5, xbuzzer_test_Handle);
+    //xTaskCreate(&ultrasonic_test, "ultrasonic_test", 1024 * 12, NULL, 5, xultrasonic_test_Handle);
+    xTaskCreate(&motor_test, "motor_test", 1024 * 12, NULL, 5, xmotor_test_Handle);
+    //xTaskCreate(&demo_task, "demo_task", 1024 * 12, NULL, 5, xdemo_task_Handle);
+
     
-    //xTaskCreate(&RGB_led_test, "RGB_led_test", 1024 * 12, NULL, 5, NULL);
-    //xTaskCreate(&buzzer_test, "buzzer_test", 1024 * 12, NULL, 5, NULL);
-    //xTaskCreate(&ultrasonic_test, "ultrasonic_test", 1024 * 12, NULL, 5, NULL);
-    //xTaskCreate(&demo_task, "demo_task", 1024 * 12, NULL, 5, NULL);
-    printf("set_motor_R_fwd(30)\n");
-    //set_motor_R_fwd(70.0);
-    set_motor_L_fwd(70.0);
-    int count = 0;
     for(;;){
-            
-            //delay_ms(100);
-
-            pcnt_get_counter_value(PCNT_UNIT_0, &count);
-            printf("%d.\n",count);
-            delay_ms(1000);
-            /*printf("set_motor_R_rvs(50)\n");
-            set_motor_R_fwd(50.0);
-            set_motor_L_fwd(50.0);
-            delay_ms(1000);
-            printf("set_motor_R_stop()\n");
-            set_motor_R_stop();
-            set_motor_L_stop();
-            delay_ms(1000);
-            printf("set_motor_L_fwd(50)\n");
-            set_motor_L_fwd(50.0);
-            set_motor_L_rvs(50.0);
-            delay_ms(1000);
-            printf("set_motor_L_rvs(80)\n");
-            set_motor_L_rvs(100.0);
-            set_motor_L_rvs(100.0);
-            delay_ms(1000);
-            printf("set_motor_L_stop()\n");
-            set_motor_L_stop();
-            set_motor_R_stop();
-            delay_ms(1000);*/
-
+        delay_ms(100);
     }
 }

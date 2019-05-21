@@ -8,25 +8,6 @@
 #include "motor_driver.h"
 #include "driver/mcpwm.h"
 
-#define PCNT_TEST_UNIT      PCNT_UNIT_0
-#define PCNT_H_LIM_VAL      10
-#define PCNT_L_LIM_VAL     -10
-#define PCNT_THRESH1_VAL    5
-#define PCNT_THRESH0_VAL   -5
-#define PCNT_INPUT_SIG_IO   4  // Pulse Input GPIO
-#define PCNT_INPUT_CTRL_IO  5  // Control GPIO HIGH=count up, LOW=count down
-#define LEDC_OUTPUT_IO      18 // Output GPIO of a sample 1 Hz pulse generator
-
-xQueueHandle pcnt_evt_queue;   // A queue to handle pulse counter events
-pcnt_isr_handle_t user_isr_handle = NULL; //user's ISR service handle
-
-/* A sample structure to pass events from the PCNT
- * interrupt handler to the main program.
- */
-typedef struct {
-    int unit;  // the PCNT unit that originated an interrupt
-    uint32_t status; // information on the event type that caused the interrupt
-} pcnt_evt_t;
 
 void motor_init(void)
 {
@@ -68,77 +49,88 @@ void motor_init(void)
 	mcpwm_init(MCPWM_UNIT_1, MCPWM_TIMER_1, &pwm_config);
 	mcpwm_start(MCPWM_UNIT_1, MCPWM_TIMER_1);
 
-
-    pcnt_config_t pcnt_config = {
-        // Set PCNT input signal and control GPIOs
-        .pulse_gpio_num = GPIO_MOTOR_R_SENSOR,
-        .channel = PCNT_CHANNEL_0,
-        .unit = PCNT_UNIT_0,
-        // What to do on the positive / negative edge of pulse input?
-        .pos_mode = PCNT_COUNT_INC,   // Count up on the positive edge
-        .neg_mode = PCNT_COUNT_DIS,   // Keep the counter value on the negative edge
-        // What to do when control input is low or high?
-        
-        // Set the maximum and minimum limit values to watch
-        .counter_h_lim = PCNT_H_LIM_VAL,
-        .counter_l_lim = PCNT_L_LIM_VAL,
-    };
-    /* Initialize PCNT unit */
-    pcnt_unit_config(&pcnt_config);
-
-
-    /* Initialize PCNT's counter */
-    pcnt_counter_pause(PCNT_TEST_UNIT);
-    pcnt_counter_clear(PCNT_TEST_UNIT);
-
-    /* Everything is set up, now go to counting */
-    pcnt_counter_resume(PCNT_TEST_UNIT);
-
 }
 
 void set_motor_R_fwd(float speed)
 {
-    //pcnt_counter_pause(PCNT_TEST_UNIT);
-    //pcnt_counter_clear(PCNT_TEST_UNIT);
-
-    /* Everything is set up, now go to counting */
-    //pcnt_counter_resume(PCNT_TEST_UNIT);
-    //int count = 0;
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,0.0);
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,speed);
-    /*for(;;){
-        if(pcnt_get_counter_value(PCNT_TEST_UNIT, &count)>20)break;
-    }*/
-    
+    delay_ms(1);
 }
 
 void set_motor_R_rvs(float speed)
 {
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,speed);
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,0);
+    delay_ms(1);
 }
 
 void set_motor_R_stop()
 {
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,0);
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,0);
+    delay_ms(1);
 }
 
 void set_motor_L_fwd(float speed)
 {
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_A,0);
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_B,speed);
+    delay_ms(1);
 }
 
 void set_motor_L_rvs(float speed)
 {
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_A,speed);
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_B,0);
+    delay_ms(1);
 }
 
 void set_motor_L_stop()
 {
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_A,0);
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_B,0);
+    delay_ms(1);
 }
 
+void set_motor_R(int steps, int direction, float speed)
+{
+    if(direction==(1)){
+        set_motor_R_fwd(speed);
+    }
+    if(direction==(-1)){
+        set_motor_R_rvs(speed);
+    }
+    //delay_ms(steps);
+    //set_motor_R_stop();
+    xTaskCreate( counter_R_task, "Set_motor_R_task", 1024*2, (void *) steps, 1, xCounterRHandle );
+}
+
+void set_motor_L(int steps, int direction, float speed)
+{
+    if(direction==(1)){
+        set_motor_L_fwd(speed);
+    }
+    if(direction==(-1)){
+        set_motor_L_rvs(speed);
+    }
+    //delay_ms(steps);
+    //set_motor_L_stop();
+    xTaskCreate( counter_L_task, "Set_motor_L_task", 1024*2, (void *) steps, 1, xCounterLHandle );
+}
+
+void counter_R_task(void *parameter)
+{
+    int *counter = (int *)parameter;   
+    delay_ms(counter);
+    set_motor_R_stop();
+    vTaskDelete( xCounterRHandle );
+}
+
+void counter_L_task(void *parameter)
+{
+    int *counter = (int *)parameter;   
+    delay_ms(counter);
+    set_motor_L_stop();
+    vTaskDelete( xCounterRHandle );
+}
