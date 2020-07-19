@@ -1,11 +1,3 @@
-/* Hello World Example
-
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -20,7 +12,7 @@
 #include "infrared.h"
 
 
-static const char* TAG = "robot_car";
+//static const char* TAG = "robot_car";
 
 TaskHandle_t xservo_test_Handle;
 TaskHandle_t xRGB_led_test_Handle;

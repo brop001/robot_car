@@ -122,7 +122,7 @@ void set_motor_L(int steps, int direction, float speed)
 void counter_R_task(void *parameter)
 {
     int *counter = (int *)parameter;   
-    delay_ms(counter);
+    delay_ms(*counter);
     set_motor_R_stop();
     vTaskDelete( xCounterRHandle );
 }
@@ -130,7 +130,7 @@ void counter_R_task(void *parameter)
 void counter_L_task(void *parameter)
 {
     int *counter = (int *)parameter;   
-    delay_ms(counter);
+    delay_ms(*counter);
     set_motor_L_stop();
     vTaskDelete( xCounterRHandle );
 }
