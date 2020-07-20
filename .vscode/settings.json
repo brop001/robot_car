@@ -11,5 +11,6 @@
   "files.associations": {
     "task.h": "c",
     "freertos.h": "c"
-  }
+  },
+  "idf.portWin": "COM3"
 }
