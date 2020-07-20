@@ -35,7 +35,6 @@ int get_us_distance_in_us()
 
     unsigned long start = esp_timer_get_time();
     unsigned long before = 0;
-    unsigned long before2 = 0;
     unsigned long after = 0;
 
     while(!gpio_get_level(GPIO_US_ECHO))
