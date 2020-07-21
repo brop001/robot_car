@@ -36,6 +36,8 @@ void set_motor_R_stop(void);
 void set_motor_L_fwd(float speed);
 void set_motor_L_rvs(float speed);
 void set_motor_L_stop(void);
+void start_car(int direction, float speed);
+void stop_car(void);
 
 void set_motor_R(int steps, int direction, float speed);
 void set_motor_L(int steps, int direction, float speed);

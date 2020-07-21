@@ -11,6 +11,7 @@
 #include "servo.h"
 #include "infrared.h"
 
+#include "broglisz_functions.h"
 
 //static const char* TAG = "robot_car";
 
@@ -21,6 +22,8 @@ TaskHandle_t xultrasonic_test_Handle;
 TaskHandle_t xmotor_test_Handle;
 TaskHandle_t xinfrared_test_Handle;
 TaskHandle_t xdemo_task_Handle;
+TaskHandle_t xmusic_task_Handle;
+TaskHandle_t xmoving_task_Handle;
 
 void servo_test(void *parameters);
 void RGB_led_test(void *parameters);
@@ -29,7 +32,8 @@ void ultrasonic_test(void *parameters);
 void motor_test(void *parameters);
 void infrared_test(void *parameters);
 void demo_task(void *parameters);
-
+void music_task(void *parameters);
+void moving_task(void *parameters);
 
 void servo_test(void *parameters)
 {
@@ -239,6 +243,20 @@ void demo_task(void *parameters)
     }
 }
 
+void music_task(void *parameters)
+{
+    while(1){
+        star_wars_music();
+    }
+}
+
+void moving_task(void *parameters)
+{
+     while(1){
+        move_car_aviod();
+     }
+}
+
 void app_main()
 {   
     buzzer_init();
@@ -254,7 +272,10 @@ void app_main()
     //xTaskCreate(&ultrasonic_test, "ultrasonic_test", 1024 * 12, NULL, 5, xultrasonic_test_Handle);
     //xTaskCreate(&motor_test, "motor_test", 1024 * 12, NULL, 5, xmotor_test_Handle);
     //xTaskCreate(&infrared_test, "infrared_test", 1024 * 12, NULL, 5, xinfrared_test_Handle);
-    xTaskCreate(&demo_task, "demo_task", 1024 * 12, NULL, 5, xdemo_task_Handle);
+    //xTaskCreate(&demo_task, "demo_task", 1024 * 12, NULL, 5, xdemo_task_Handle);
+    xTaskCreate(&music_task, "music_task", 1024 * 12, NULL, 5, xmusic_task_Handle);
+    //xTaskCreate(&moving_task, "moving_task", 1024 * 12, NULL, 5, xmoving_task_Handle);
+    
 
     
     for(;;){

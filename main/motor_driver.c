@@ -132,5 +132,23 @@ void counter_L_task(void *parameter)
     int *counter = (int *)parameter;   
     delay_ms(*counter);
     set_motor_L_stop();
-    vTaskDelete( xCounterRHandle );
+    vTaskDelete( xCounterLHandle );
+}
+
+void start_car(int direction, float speed)
+{
+    if(direction==(1)){
+        set_motor_R_fwd(speed);
+        set_motor_L_fwd(speed);
+    }
+    if(direction==(-1)){
+        set_motor_R_rvs(speed);
+        set_motor_L_rvs(speed);
+    }
+}
+
+void stop_car()
+{
+    set_motor_R_stop();
+    set_motor_L_stop();
 }
