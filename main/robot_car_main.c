@@ -11,6 +11,7 @@
 #include "servo.h"
 #include "infrared.h"
 
+#include "broglisz_functions.h"
 
 //static const char* TAG = "robot_car";
 
@@ -33,29 +34,6 @@ void infrared_test(void *parameters);
 void demo_task(void *parameters);
 void music_task(void *parameters);
 void moving_task(void *parameters);
-
-void buzzer_led(int freq, int delay);
-
-const int c = 261;
-const int d = 294;
-const int e = 329;
-const int f = 349;
-const int g = 391;
-const int gS = 415;
-const int a = 440;
-const int aS = 455;
-const int b = 466;
-const int cH = 523;
-const int cSH = 554;
-const int dH = 587;
-const int dSH = 622;
-const int eH = 659;
-const int fH = 698;
-const int fSH = 740;
-const int gH = 784;
-const int gSH = 830;
-const int aH = 880;
-
 
 void servo_test(void *parameters)
 {
@@ -265,245 +243,17 @@ void demo_task(void *parameters)
     }
 }
 
-
-void buzzer_led(int freq, int delay){
-    buzzer(freq,delay);
-    if((freq>=261)&&(freq<349))
-    {
-        set_led(LED_RED);
-    }
-    if((freq>=349)&&(freq<455))
-    {
-        set_led(LED_GREEN);
-    }
-    if((freq>=455)&&(freq<554))
-    {
-        set_led(LED_BLUE);
-    }
-    if((freq>=554)&&(freq<622))
-    {
-        set_led(LED_YELLOW);
-    }
-    if((freq>=622)&&(freq<698))
-    {
-        set_led(LED_CYAN);
-    }
-    if((freq>=698)&&(freq<784))
-    {
-        set_led(LED_MAGENTA);
-    }
-    if((freq>=784)&&(freq<880))
-    {
-        set_led(LED_WHITE);
-    }
-
-}
-
 void music_task(void *parameters)
 {
     while(1){
-        buzzer_led(a, 500);
-        buzzer_led(a, 500);    
-        buzzer_led(a, 500);
-        buzzer_led(f, 350);
-        buzzer_led(cH, 150);  
-        buzzer_led(a, 500);
-        buzzer_led(f, 350);
-        buzzer_led(cH, 150);
-        buzzer_led(a, 650);
-        
-        delay_ms(500);
-        
-        buzzer_led(eH, 500);
-        buzzer_led(eH, 500);
-        buzzer_led(eH, 500);  
-        buzzer_led(fH, 350);
-        buzzer_led(cH, 150);
-        buzzer_led(gS, 500);
-        buzzer_led(f, 350);
-        buzzer_led(cH, 150);
-        buzzer_led(a, 650);
-        
-        delay_ms(500);
-
-
-        //Play second section
-        //secondSection();
-        buzzer_led(aH, 500);
-        buzzer_led(a, 300);
-        buzzer_led(a, 150);
-        buzzer_led(aH, 500);
-        buzzer_led(gSH, 325);
-        buzzer_led(gH, 175);
-        buzzer_led(fSH, 125);
-        buzzer_led(fH, 125);    
-        buzzer_led(fSH, 250);
-        
-        delay_ms(325);
-        
-        buzzer_led(aS, 250);
-        buzzer_led(dSH, 500);
-        buzzer_led(dH, 325);  
-        buzzer_led(cSH, 175);  
-        buzzer_led(cH, 125);  
-        buzzer_led(b, 125);  
-        buzzer_led(cH, 250);  
-        
-        delay_ms(350);
-
-
-        //Variant 1
-        buzzer_led(f, 250);  
-        buzzer_led(gS, 500);  
-        buzzer_led(f, 350);  
-        buzzer_led(a, 125);
-        buzzer_led(cH, 500);
-        buzzer_led(a, 375);  
-        buzzer_led(cH, 125);
-        buzzer_led(eH, 650);
-        
-        delay_ms(500);
-        
-        //Repeat second section
-        //secondSection();
-        buzzer_led(aH, 500);
-        buzzer_led(a, 300);
-        buzzer_led(a, 150);
-        buzzer_led(aH, 500);
-        buzzer_led(gSH, 325);
-        buzzer_led(gH, 175);
-        buzzer_led(fSH, 125);
-        buzzer_led(fH, 125);    
-        buzzer_led(fSH, 250);
-        
-        delay_ms(325);
-        
-        buzzer_led(aS, 250);
-        buzzer_led(dSH, 500);
-        buzzer_led(dH, 325);  
-        buzzer_led(cSH, 175);  
-        buzzer_led(cH, 125);  
-        buzzer_led(b, 125);  
-        buzzer_led(cH, 250);  
-        
-        delay_ms(350);
-
-
-        //Variant 2
-        buzzer_led(f, 250);  
-        buzzer_led(gS, 500);  
-        buzzer_led(f, 375);  
-        buzzer_led(cH, 125);
-        buzzer_led(a, 500);  
-        buzzer_led(f, 375);  
-        buzzer_led(cH, 125);
-        buzzer_led(a, 650);  
- 
+        star_wars_music();
     }
 }
 
 void moving_task(void *parameters)
 {
      while(1){
-        
-        start_car(1,50);
-        for(;;)
-        {
-            if(get_ir_sensor_R2()==0)
-            {
-                stop_car();
-                delay_ms(250);
-                set_motor_R(1000,1,60);
-                delay_ms(1005);
-                start_car(1,50);
-            }
-            else if((get_ir_sensor_R1()==0)&&(get_ir_sensor_R2()==0))
-            {
-                start_car(-1,60);
-                delay_ms(500);
-                stop_car();
-                set_motor_R(1000,1,50);
-                set_motor_L(1000,-1,50);
-                delay_ms(1005);
-                start_car(1,50);
-            }
-            else if(get_ir_sensor_L2()==0)
-            {
-                stop_car();
-                delay_ms(250);
-                set_motor_L(1000,1,60);
-                delay_ms(1005);
-                start_car(1,50);
-            }
-            else if((get_ir_sensor_L1()==0)&&(get_ir_sensor_L2()==0))
-            {
-                stop_car();
-                start_car(-1,60);
-                delay_ms(500);
-                stop_car();
-                set_motor_L(1000,1,50);
-                set_motor_R(1000,-1,50);
-                delay_ms(1000);
-                start_car(1,50);
-            }
-            else if(get_ir_sensor_L1()==0)
-            {
-                stop_car();
-                start_car(-1,60);
-                delay_ms(250);
-                set_motor_L(1000,1,50);
-                set_motor_R(1000,-1,50);
-                delay_ms(1000);
-                start_car(1,50);
-            }
-            else if(get_ir_sensor_R1()==0)
-            {
-                stop_car();
-                start_car(-1,60);
-                delay_ms(250);
-                set_motor_R(1000,1,50);
-                set_motor_L(1000,-1,50);
-                delay_ms(1000);
-                start_car(1,50);
-            }
-            else if((get_ir_sensor_L1()==0)&&(get_ir_sensor_R1()==0))
-            {
-                stop_car();
-                set_motor_R(1000,-1,50);
-                set_motor_L(1000,1,50);
-                delay_ms(1000);
-                start_car(1,50);
-            }
-            else if((get_ir_sensor_R1()==0)&&(get_ir_sensor_R2()==0)&&(get_ir_sensor_L2()==0)&&(get_ir_sensor_L1()==0))
-            {
-                stop_car();
-                buzzer_led(500,50);
-                start_car(1,50);
-            }
-            else
-            {
-                start_car(-1,60);
-                stop_car();
-                set_motor_L(1000,1,50);
-                delay_ms(1000);
-                start_car(1,50);
-            }
-            delay_ms(50);
-        }
-
-/*for(;;){
-    break;
-}*/
-
-        //set_motor_R(500,1,50);
-        //set_motor_L(500,1,50);
-        //delay_ms(500);
-
-        //set_motor_R(250,-1,50);
-        //set_motor_L(250,1,50);
-        //delay_ms(1000);
-
-
+        move_car_aviod();
      }
 }
 
