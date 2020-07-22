@@ -101,9 +101,9 @@ void set_motor_R(int steps, int direction, float speed)
     if(direction==(-1)){
         set_motor_R_rvs(speed);
     }
-    //delay_ms(steps);
-    //set_motor_R_stop();
-    xTaskCreate( counter_R_task, "Set_motor_R_task", 1024*2, (void *) steps, 1, xCounterRHandle );
+    delay_ms(steps);
+    set_motor_R_stop();
+    //xTaskCreate( counter_R_task, "Set_motor_R_task", 1024*2, (void *) steps, 1, xCounterRHandle );
 }
 
 void set_motor_L(int steps, int direction, float speed)
@@ -114,9 +114,9 @@ void set_motor_L(int steps, int direction, float speed)
     if(direction==(-1)){
         set_motor_L_rvs(speed);
     }
-    //delay_ms(steps);
-    //set_motor_L_stop();
-    xTaskCreate( counter_L_task, "Set_motor_L_task", 1024*2, (void *) steps, 1, xCounterLHandle );
+    delay_ms(steps);
+    set_motor_L_stop();
+    //xTaskCreate( counter_L_task, "Set_motor_L_task", 1024*2, (void *) steps, 1, xCounterLHandle );
 }
 
 void counter_R_task(void *parameter)

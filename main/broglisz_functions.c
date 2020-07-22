@@ -147,103 +147,37 @@ void star_wars_music(){
     buzzer_led(NOTE_a, 650);
 }
 
+
+int a,b,c,d;
+int fwd_request = 1;
 void move_car_aviod(){
 
-    start_car(1,50);
-    for(;;)
+    a = get_ir_sensor_R2();
+    b = get_ir_sensor_R1();
+    c = get_ir_sensor_L1();
+    d = get_ir_sensor_L2();
+    
+    if((a==IR_FREE)&&(b==IR_FREE)&&(c==IR_FREE)&&(d==IR_FREE))
     {
-        if(get_ir_sensor_R2()==0)
-        {
-            stop_car();
-            delay_ms(250);
-            set_motor_R(1000,1,60);
-            delay_ms(1005);
+        if(fwd_request==1){
+            printf("FOWARD\n");
             start_car(1,50);
+            fwd_request=0;
         }
-        else if((get_ir_sensor_R1()==0)&&(get_ir_sensor_R2()==0))
-        {
-            start_car(-1,60);
-            delay_ms(500);
-            stop_car();
-            set_motor_R(1000,1,50);
-            set_motor_L(1000,-1,50);
-            delay_ms(1005);
-            start_car(1,50);
-        }
-        else if(get_ir_sensor_L2()==0)
-        {
-            stop_car();
-            delay_ms(250);
-            set_motor_L(1000,1,60);
-            delay_ms(1005);
-            start_car(1,50);
-        }
-        else if((get_ir_sensor_L1()==0)&&(get_ir_sensor_L2()==0))
-        {
-            stop_car();
-            start_car(-1,60);
-            delay_ms(500);
-            stop_car();
-            set_motor_L(1000,1,50);
-            set_motor_R(1000,-1,50);
-            delay_ms(1000);
-            start_car(1,50);
-        }
-        else if(get_ir_sensor_L1()==0)
-        {
-            stop_car();
-            start_car(-1,60);
-            delay_ms(250);
-            set_motor_L(1000,1,50);
-            set_motor_R(1000,-1,50);
-            delay_ms(1000);
-            start_car(1,50);
-        }
-        else if(get_ir_sensor_R1()==0)
-        {
-            stop_car();
-            start_car(-1,60);
-            delay_ms(250);
-            set_motor_R(1000,1,50);
-            set_motor_L(1000,-1,50);
-            delay_ms(1000);
-            start_car(1,50);
-        }
-        else if((get_ir_sensor_L1()==0)&&(get_ir_sensor_R1()==0))
-        {
-            stop_car();
-            set_motor_R(1000,-1,50);
-            set_motor_L(1000,1,50);
-            delay_ms(1000);
-            start_car(1,50);
-        }
-        else if((get_ir_sensor_R1()==0)&&(get_ir_sensor_R2()==0)&&(get_ir_sensor_L2()==0)&&(get_ir_sensor_L1()==0))
-        {
-            stop_car();
-            buzzer_led(500,50);
-            start_car(1,50);
-        }
-        else
-        {
-            start_car(-1,60);
-            stop_car();
-            set_motor_L(1000,1,50);
-            delay_ms(1000);
-            start_car(1,50);
-        }
-        delay_ms(50);
     }
-
-/*for(;;){
-    break;
-}*/
-
-    //set_motor_R(500,1,50);
-    //set_motor_L(500,1,50);
-    //delay_ms(500);
-
-    //set_motor_R(250,-1,50);
-    //set_motor_L(250,1,50);
-    //delay_ms(1000);
-
+    if(((a==IR_DETECT)||(b==IR_DETECT))&&(c==IR_FREE)&&(d==IR_FREE))
+    {
+        printf("DETECT OBSTACLE AT RIGHT\n");
+        stop_car();
+        set_motor_R(500,1,50);
+        fwd_request=1;
+    }
+    if((a==IR_FREE)&&(b==IR_FREE)&&((c==IR_DETECT)||(d==IR_DETECT)))
+    {
+        printf("DETECT OBSTACLE AT LEFT\n");
+        stop_car();
+        set_motor_L(500,1,50);
+        fwd_request=1;
+    }
+    delay_ms(50);
 }

@@ -273,8 +273,8 @@ void app_main()
     //xTaskCreate(&motor_test, "motor_test", 1024 * 12, NULL, 5, xmotor_test_Handle);
     //xTaskCreate(&infrared_test, "infrared_test", 1024 * 12, NULL, 5, xinfrared_test_Handle);
     //xTaskCreate(&demo_task, "demo_task", 1024 * 12, NULL, 5, xdemo_task_Handle);
-    xTaskCreate(&music_task, "music_task", 1024 * 12, NULL, 5, xmusic_task_Handle);
-    //xTaskCreate(&moving_task, "moving_task", 1024 * 12, NULL, 5, xmoving_task_Handle);
+    //xTaskCreate(&music_task, "music_task", 1024 * 12, NULL, 5, xmusic_task_Handle);
+    xTaskCreate(&moving_task, "moving_task", 1024 * 12, NULL, 5, xmoving_task_Handle);
     
 
     

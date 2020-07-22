@@ -28,6 +28,9 @@
 #define NOTE_gSH 830
 #define NOTE_aH 880
 
+#define IR_FREE 1
+#define IR_DETECT 0
+
 void buzzer_led(int freq, int delay);
 void star_wars_music();
 void move_car_aviod();
