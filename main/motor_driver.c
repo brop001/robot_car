@@ -61,20 +61,20 @@ void set_motor_R_fwd(float speed)
 void set_motor_R_rvs(float speed)
 {
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,speed);
-    mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,0);
+    mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,0.0);
     delay_ms(1);
 }
 
 void set_motor_R_stop()
 {
-    mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,0);
-    mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,0);
+    mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,0.0);
+    mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,0.0);
     delay_ms(1);
 }
 
 void set_motor_L_fwd(float speed)
 {
-    mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_A,0);
+    mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_A,0.0);
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_B,speed);
     delay_ms(1);
 }
@@ -82,14 +82,14 @@ void set_motor_L_fwd(float speed)
 void set_motor_L_rvs(float speed)
 {
     mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_A,speed);
-    mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_B,0);
+    mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_B,0.0);
     delay_ms(1);
 }
 
 void set_motor_L_stop()
 {
-    mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_A,0);
-    mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_B,0);
+    mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_A,0.0);
+    mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_1,MCPWM_OPR_B,0.0);
     delay_ms(1);
 }
 
@@ -101,9 +101,9 @@ void set_motor_R(int steps, int direction, float speed)
     if(direction==(-1)){
         set_motor_R_rvs(speed);
     }
-    //delay_ms(steps);
-    //set_motor_R_stop();
-    xTaskCreate( counter_R_task, "Set_motor_R_task", 1024*2, (void *) steps, 1, xCounterRHandle );
+    delay_ms(steps);
+    set_motor_R_stop();
+    //xTaskCreate( counter_R_task, "Set_motor_R_task", 1024*2, (void *) steps, 1, xCounterRHandle );
 }
 
 void set_motor_L(int steps, int direction, float speed)
@@ -114,11 +114,40 @@ void set_motor_L(int steps, int direction, float speed)
     if(direction==(-1)){
         set_motor_L_rvs(speed);
     }
-    //delay_ms(steps);
-    //set_motor_L_stop();
-    xTaskCreate( counter_L_task, "Set_motor_L_task", 1024*2, (void *) steps, 1, xCounterLHandle );
+    delay_ms(steps);
+    set_motor_L_stop();
+    //xTaskCreate( counter_L_task, "Set_motor_L_task", 1024*2, (void *) steps, 1, xCounterLHandle );
 }
 
+void set_motors(float right_speed, float left_speed)
+{
+    if(right_speed>0){
+        mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,0.0);    //rvs
+        mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,right_speed);  //fwd
+    }
+    if(right_speed<0){
+        mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,-right_speed);    //rvs
+        mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,0.0);  //fwd
+    }
+    if(right_speed==0){
+        mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,0.0);    //rvs
+        mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,0.0);  //fwd
+    }
+    if(left_speed>0){
+        mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,0.0);    //rvs
+        mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,left_speed);  //fwd
+    }
+    if(left_speed<0){
+        mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,-left_speed);    //rvs
+        mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,0.0);  //fwd
+    }
+    if(left_speed==0){
+        mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_A,0.0);    //rvs
+        mcpwm_set_duty(MCPWM_UNIT_1, MCPWM_TIMER_0,MCPWM_OPR_B,0.0);  //fwd
+    }
+    delay_ms(1);
+}
+/*
 void counter_R_task(void *parameter)
 {
     int *counter = (int *)parameter;   
@@ -134,7 +163,7 @@ void counter_L_task(void *parameter)
     set_motor_L_stop();
     vTaskDelete( xCounterLHandle );
 }
-
+*/
 void start_car(int direction, float speed)
 {
     if(direction==(1)){
