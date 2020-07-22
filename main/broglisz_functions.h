@@ -33,6 +33,6 @@
 
 void buzzer_led(int freq, int delay);
 void star_wars_music();
-void move_car_aviod();
+void move_car_avoid();
 
 #endif /* MAIN_BROGLISZ_FUNCTIONS_H_ */

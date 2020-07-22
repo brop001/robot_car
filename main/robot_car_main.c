@@ -245,16 +245,12 @@ void demo_task(void *parameters)
 
 void music_task(void *parameters)
 {
-    while(1){
-        star_wars_music();
-    }
+    star_wars_music();
 }
 
 void moving_task(void *parameters)
 {
-     while(1){
-        move_car_aviod();
-     }
+    move_car_avoid();
 }
 
 void app_main()
